@@ -1,0 +1,26 @@
+{
+    "name": "gl-api-request-helper",
+    "description": "GL API Request Helper",
+    "version": "0.0.1",
+
+    "author": {
+        "name": "Giorgi Maisuradze"
+    },
+    "maintainers": [
+        {
+            "name": "and1gio",
+            "email": "g.maisuradze88@gmail.com"
+        },
+        {
+            "name": "levansuper",
+            "email": "l.basharuli@gmail.com"
+        }
+    ],
+
+    "dependencies": {
+        "gl-clients-error-codes": "0.0.1",
+        "request": "2.72.0"
+    },
+
+    "main": "gl-api-request-helper.js"
+}
