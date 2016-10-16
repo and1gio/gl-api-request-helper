@@ -1,8 +1,7 @@
 {
-    "name": "gl-api-request-helper",
-    "description": "GL API Request Helper",
+    "name": "z-api-request-helper",
+    "description": "Z API Request Helper",
     "version": "0.0.1",
-
     "author": {
         "name": "Giorgi Maisuradze"
     },
@@ -18,9 +17,7 @@
     ],
 
     "dependencies": {
-        "gl-clients-error-codes": "0.0.1",
         "request": "2.72.0"
     },
-
-    "main": "gl-api-request-helper.js"
+    "main": "z-api-request-helper.js"
 }

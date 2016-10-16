@@ -1,8 +1,8 @@
-# GL Api Request Helper For GL APIs
+# Z Api Request Helper For Z APIs
 
 # config
 ```js
-var ApiRequestHelper = require("gl-api-request-helper");
+var ApiRequestHelper = require("z-api-request-helper");
 var api = new ApiRequestHelper({
     host: 'apiHost',
     port: '80',
@@ -12,13 +12,27 @@ var api = new ApiRequestHelper({
 
 # making a call 
 ```js
+
 var params = {
     a: 1,
     b: 2,
     c: {d: 3}
 };
 
-api.request("method-name", params, function(err, res) {
+api.get("method-name",function(err, res) {
     console.log(err, res);
 });
+
+api.post("method-name", params, function(err, res) {
+    console.log(err, res);
+});
+
+api.put("method-name", params, function(err, res) {
+    console.log(err, res);
+});
+
+api.delete("method-name", params, function(err, res) {
+    console.log(err, res);
+});
+
 ```
