@@ -19,5 +19,5 @@
     "dependencies": {
         "request": "2.72.0"
     },
-    "main": "z-api-request-helper.js"
+    "main": "gl-api-request-helper.js"
 }

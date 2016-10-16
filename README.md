@@ -1,6 +1,6 @@
 # Z Api Request Helper For Z APIs
 
-# config
+## config
 ```js
 var ApiRequestHelper = require("z-api-request-helper");
 var api = new ApiRequestHelper({
@@ -10,7 +10,7 @@ var api = new ApiRequestHelper({
 });
 ```
 
-# making a call 
+## Usage Examples
 ```js
 
 var params = {
