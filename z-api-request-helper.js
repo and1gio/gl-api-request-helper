@@ -26,6 +26,10 @@ zApiRequestHelper.makeRequest = function(type, method, params, cb) {
 
     var params = {url: apiUrl, json: params};
 
+    if(config.timeout){
+        params.timeout = config.timeout
+    }
+
     if (type !== 'get') {
         request[type](params, function (error, response, body) {
             me.handleSendResponse(error, response, body, cb);
@@ -77,6 +81,14 @@ zApiRequestHelper.put = function (method, params, cb) {
 zApiRequestHelper.delete = function (method, params, cb) {
     var me = this;
     me.makeRequest('delete', method, params, function (err, res) {
+        return cb(err, res);
+    });
+};
+
+// TODO for msda - deprecated
+zApiRequestHelper.request = function (method, params, cb) {
+    var me = this;
+    me.makeRequest('post', method, params, function (err, res) {
         return cb(err, res);
     });
 };

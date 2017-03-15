@@ -6,7 +6,8 @@ var ApiRequestHelper = require("z-api-request-helper");
 var api = new ApiRequestHelper({
     host: 'apiHost',
     port: '80',
-    path: '/api/'
+    path: '/api/',
+    timeout: 20000 // 20 sec
 });
 ```
 
