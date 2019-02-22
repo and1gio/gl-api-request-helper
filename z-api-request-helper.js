@@ -1,26 +1,22 @@
-const request = require('request');
+var request = require('request');
 
-let ZApiRequestHelper = function (config, logger) {
-    if (!config) {
+var ZApiRequestHelper = function (config, logger) {
+    if(!config) {
         throw { keyword: 'API_REQUEST_HELPER_CONFIG_MISSING' };
     }
     this.config = config;
     this.logger = logger;
 };
 
-let zApiRequestHelper = ZApiRequestHelper.prototype;
+var zApiRequestHelper = ZApiRequestHelper.prototype;
 
-zApiRequestHelper.makeRequest = function (type, method, params, cb) {
-    let me = this;
+zApiRequestHelper.makeRequest = function(type, method, params, cb) {
 
-    const protocol = me.config.protocol || "http://";
-    const host = me.config.host;
-    const port = me.config.port;
-    const path = me.config.path;
+    var me = this;
+    var config = me.config;
+    var apiUrl = "http://" + config.host + ":" + config.port + config.path + method;
 
-    const apiUrl = protocol.concat(host, ":", port, path, method);
-
-    if (me.config.debug) {
+    if (config && config.debug) {
         if (me.logger) {
             me.logger.info(type, apiUrl, params);
         } else {
@@ -28,73 +24,69 @@ zApiRequestHelper.makeRequest = function (type, method, params, cb) {
         }
     }
 
-    params = { url: apiUrl, json: params };
-
-    if (me.config.timeout) {
-        params.timeout = me.config.timeout
-    }
+    var params = {url: apiUrl, json: params, timeout: 0};
 
     if (type !== 'get') {
-        request[type](params, (error, response, body) => {
-            handleSendResponse(error, response, body, cb);
+        request[type](params, function (error, response, body) {
+            me.handleSendResponse(error, response, body, cb);
         });
     } else {
-        request(apiUrl, (error, response, body) => {
-            handleSendResponse(error, response, body, cb);
-        });
+        request(apiUrl, function (error, response, body) {
+            me.handleSendResponse(error, response, body, cb);
+        })
     }
 };
 
-zApiRequestHelper.get = function (method, cb) {
-    let me = this;
-    me.makeRequest('get', method, null, (err, res) => {
-        return cb(err, res);
-    });
-};
-
-zApiRequestHelper.post = function (method, params, cb) {
-    let me = this;
-    me.makeRequest('post', method, params, (err, res) => {
-        return cb(err, res);
-    });
-};
-
-zApiRequestHelper.put = function (method, params, cb) {
-    let me = this;
-    me.makeRequest('put', method, params, (err, res) => {
-        return cb(err, res);
-    });
-};
-
-zApiRequestHelper.delete = function (method, params, cb) {
-    let me = this;
-    me.makeRequest('delete', method, params, (err, res) => {
-        return cb(err, res);
-    });
-};
-
-// TODO for msda - deprecated
-zApiRequestHelper.request = function (method, params, cb) {
-    let me = this;
-    me.makeRequest('post', method, params, (err, res) => {
-        return cb(err, res);
-    });
-};
-
-function handleSendResponse(fnError, response, body, callback) {
+zApiRequestHelper.handleSendResponse = function (fnError, response, body, callback) {
     if (fnError) {
-        return callback([{ keyword: 'CONNECTION_ERROR', error: fnError }], null);
+        return callback([{keyword: 'CONNECTION_ERROR', error: fnError}], null);
     }
 
     if (!body) {
-        return callback([{ keyword: 'RESPONSE_BODY_IS_EMPTY' }], null);
+        return callback([{keyword: 'RESPONSE_BODY_IS_EMPTY'}], null);
     }
 
     if (body.error) {
         return callback(body.error, null);
     }
 
-    callback(null, body.result || body);
+    callback(null, body.result);
+};
+
+zApiRequestHelper.get = function (method, cb) {
+    var me = this;
+    me.makeRequest('get', method, null, function (err, res) {
+        return cb(err, res);
+    });
+};
+
+zApiRequestHelper.post = function (method, params, cb) {
+    var me = this;
+    me.makeRequest('post', method, params, function (err, res) {
+        return cb(err, res);
+    });
+};
+
+zApiRequestHelper.put = function (method, params, cb) {
+    var me = this;
+    me.makeRequest('put', method, params, function (err, res) {
+        return cb(err, res);
+    });
+};
+
+zApiRequestHelper.delete = function (method, params, cb) {
+    var me = this;
+    me.makeRequest('delete', method, params, function (err, res) {
+        return cb(err, res);
+    });
+};
+
+// TODO for msda - deprecated
+zApiRequestHelper.request = function (method, params, cb) {
+    var me = this;
+    me.makeRequest('post', method, params, function (err, res) {
+        return cb(err, res);
+    });
 };
 
 module.exports = ZApiRequestHelper;
