@@ -1,7 +1,7 @@
 var request = require('request');
 
 var ZApiRequestHelper = function (config, logger) {
-    if(!config) {
+    if (!config) {
         throw { keyword: 'API_REQUEST_HELPER_CONFIG_MISSING' };
     }
     this.config = config;
@@ -10,7 +10,7 @@ var ZApiRequestHelper = function (config, logger) {
 
 var zApiRequestHelper = ZApiRequestHelper.prototype;
 
-zApiRequestHelper.makeRequest = function(type, method, params, cb) {
+zApiRequestHelper.makeRequest = function (type, method, params, cb, req) {
 
     var me = this;
     var config = me.config;
@@ -24,7 +24,14 @@ zApiRequestHelper.makeRequest = function(type, method, params, cb) {
         }
     }
 
-    var params = {url: apiUrl, json: params, timeout: 0};
+    var headers = {
+        'x-real-ip': req.header('x-real-ip'),
+        'x-forwarded-for': req.header('x-forwarded-for'),
+        'user-agent': req.header('user-agent'),
+        'Content-Type': 'application/json',
+    };
+
+    var params = { url: apiUrl, json: params, headers: headers, timeout: 0 };
 
     if (type !== 'get') {
         request[type](params, function (error, response, body) {
@@ -39,11 +46,11 @@ zApiRequestHelper.makeRequest = function(type, method, params, cb) {
 
 zApiRequestHelper.handleSendResponse = function (fnError, response, body, callback) {
     if (fnError) {
-        return callback([{keyword: 'CONNECTION_ERROR', error: fnError}], null);
+        return callback([{ keyword: 'CONNECTION_ERROR', error: fnError }], null);
     }
 
     if (!body) {
-        return callback([{keyword: 'RESPONSE_BODY_IS_EMPTY'}], null);
+        return callback([{ keyword: 'RESPONSE_BODY_IS_EMPTY' }], null);
     }
 
     if (body.error) {
@@ -82,9 +89,9 @@ zApiRequestHelper.delete = function (method, params, cb) {
 };
 
 // TODO for msda - deprecated
-zApiRequestHelper.request = function (method, params, cb) {
+zApiRequestHelper.request = function (method, params, cb, req) {
     var me = this;
-    me.makeRequest('post', method, params, function (err, res) {
+    me.makeRequest('post', method, params, req, function (err, res) {
         return cb(err, res);
     });
 };
