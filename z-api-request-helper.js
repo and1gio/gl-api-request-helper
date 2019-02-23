@@ -25,11 +25,14 @@ zApiRequestHelper.makeRequest = function (type, method, params, cb, req) {
     }
 
     var headers = {
-        'x-real-ip': req.header('x-real-ip'),
-        'x-forwarded-for': req.header('x-forwarded-for'),
-        'user-agent': req.header('user-agent'),
-        'Content-Type': 'application/json',
-    };
+        'Content-Type': 'application/json'
+    }
+
+    if (req && req.header) {
+        headers['x-real-ip'] = req.header('x-real-ip') || req.connection.remoteAddress;
+        headers['x-forwarded-for'] = req.header('x-forwarded-for') || req.connection.remoteAddress;
+        headers['user-agent'] = req.header('user-agent');
+    }
 
     var params = { url: apiUrl, json: params, headers: headers, timeout: 0 };
 
@@ -91,9 +94,9 @@ zApiRequestHelper.delete = function (method, params, cb) {
 // TODO for msda - deprecated
 zApiRequestHelper.request = function (method, params, cb, req) {
     var me = this;
-    me.makeRequest('post', method, params, req, function (err, res) {
+    me.makeRequest('post', method, params, function (err, res) {
         return cb(err, res);
-    });
+    }, req);
 };
 
 module.exports = ZApiRequestHelper;
