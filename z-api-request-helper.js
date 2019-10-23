@@ -56,8 +56,8 @@ zApiRequestHelper.handleSendResponse = function (fnError, response, body, callba
         return callback([{ keyword: 'RESPONSE_BODY_IS_EMPTY' }], null);
     }
 
-    if (body.error) {
-        return callback(body.error, null);
+    if (body.error || body.errors) {
+        return callback(body.error || body.errors, null);
     }
 
     callback(null, body.result);
